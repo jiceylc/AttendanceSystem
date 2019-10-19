@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>中奖信息</title>
+</head>
+
+<body>
+    <style>
+        * {
+            text-align: center;
+        }
+        
+        div {
+            text-align: center;
+        }
+        
+        table {
+            margin: auto;
+        }
+    </style>
+    <h1 style="margin-top: 8%">中奖信息</h1>
+    <div>
+
+        <table border="1">
+            <tr>
+                <td align="center" style="width:150px; height: 30px;" valign="middle">一等奖</td>
+                <td align="center" style="width:150px; height: 30px;" valign="middle">二等奖</td>
+                <td align="center" style="width:150px; height: 30px;" valign="middle">三等奖</td>
+            </tr>
+            <tr>
+                <td align="center" style="width:150px; height: 210px;white-space: pre-line;" valign="middle">
+                    <div id="first" style="display: none">{{first_pride}}</div>
+                </td>
+                <td align="center" style="width:150px; height: 210px;white-space: pre-line;" valign="middle">
+                    <div id="second" style="display: none">{{second_pride}}</div>
+                </td>
+                <td align="center" style="width:150px; height: 210px;white-space: pre-line;" valign="middle">
+                    <div id="thrid" style="display: none">{{thrid_pride}}</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <br>
+    <div style="margin-bottom: 50px;margin-top: 50px">
+        <button id="get_first" onclick="show_first()">一等奖</button>
+        <button id="get_second" onclick="show_second()">二等奖</button>
+        <button id="get_thrid" onclick="show_thrid()">三等奖</button>
+    </div>
+    <script>
+        function show_first() {
+            var oDiv = document.getElementById("first");
+            var oButton = document.getElementById("get_first")
+            if (oDiv.style.display == "none") {
+                oDiv.style.display = "block";
+            }
+        }
+
+        function show_second() {
+            var oDiv = document.getElementById("second");
+            var oButton = document.getElementById("get_second")
+            if (oDiv.style.display == "none") {
+                oDiv.style.display = "block";
+            }
+        }
+
+        function show_thrid() {
+            var oDiv = document.getElementById("thrid");
+            var oButton = document.getElementById("get_thrid")
+            if (oDiv.style.display == "none") {
+                oDiv.style.display = "block";
+            }
+        }
+    </script>
+
+</html>
