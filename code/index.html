@@ -1,0 +1,564 @@
+<html>
+<script type="text/javascript">
+    function msg() {
+        alert("提交成功，开始识别");
+    }
+</script>
+
+<body>
+
+    <style>
+        .switch-component {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background-color: #dadada;
+            border-radius: 30px;
+            border: none;
+            outline: none;
+            -webkit-appearance: none;
+            transition: all .2s ease;
+        }
+        /*按钮*/
+        
+        .switch-component::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            background-color: #fff;
+            border-radius: 50%;
+            transition: all .2s ease;
+        }
+        /*checked状态时，背景颜色改变*/
+        
+        .switch-component:checked {
+            background-color: #1dca34;
+        }
+        /*checked状态时，按钮位置改变*/
+        
+        .switch-component:checked::after {
+            left: 50%;
+        }
+        
+        table {
+            margin: auto
+        }
+        
+        * {
+            text-align: center;
+        }
+        
+        .zhezhao {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            background: #000;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+        
+        .tankuang {
+            position: relative;
+            background: #fff;
+            width: 300px;
+            height: 60%;
+            border-radius: 5px;
+            margin: 10% auto;
+        }
+        
+        #header {
+            height: 40px;
+        }
+        
+        #header-right {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 5px;
+            background: red;
+            color: #fff;
+            right: 5px;
+            top: 5px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: rgb(10, 115, 178);
+        }
+        
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            /* background-color: rgb(30, 32, 32); */
+            background-image: url("/static/bgm.jpg");
+            background-size: 100% 100%;
+            -moz-background-size: 100% 100%;
+        }
+        
+        .page {
+            /* position: absolute; */
+            /* left: 33%; */
+            /* right: 5%; */
+            margin: 80px auto;
+            width: 375px;
+            height: 375%;
+        }
+        
+        .list {
+            text-decoration: none;
+            font: bold 1.5em 'Trebuchet MS', Arial, Helvetica;
+            /*Change the em value to scale the button*/
+            display: inline-block;
+            text-align: center;
+            color: #fff;
+            border: 1px solid #9c9c9c;
+            /* Fallback style */
+            border: 0px solid rgba(0, 0, 0, 0.3);
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 .05em rgba(0, 0, 0, 0.4);
+            -moz-box-shadow: 0 0 .05em rgba(0, 0, 0, 0.4);
+            -webkit-box-shadow: 0 0 .05em rgba(0, 0, 0, 0.4);
+            /* float: left; */
+            height: 50%;
+            width: 48%;
+            position: relative;
+        }
+        
+        .list:before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            top: 10px;
+            bottom: 10px;
+            border-radius: 10px;
+            background: #428739;
+            background: -webkit-gradient(linear, left top, left bottom, from(#c8dd95), to(#428739));
+            background: -moz-linear-gradient(-90deg, #c8dd95, #428739);
+            filter: progid: DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr='#c8dd95', EndColorStr='#428739');
+        }
+        
+        .list:after {
+            content: attr(data-index);
+            position: absolute;
+            height: 30px;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            text-align: center;
+            font: 24px/30px bold 'microsoft yahei';
+        }
+    </style>
+    <div style="margin:0 auto;height: 100px;">
+        <h1 style="padding-top: 5%">剑哥哥人脸识别考勤系统</h1>
+
+        <div class="page">
+            <div class="list" data-index="签到" onclick="Q_dao()">
+
+            </div>
+            <div class="list" data-index="添加用户" onclick="Add_user()">
+
+            </div>
+            <div class="list" data-index="查询记录" onclick="Search_info()">
+
+            </div>
+            <div class="list" data-index="说明" onclick="Tips()">
+
+            </div>
+
+        </div>
+        <!-- 第一个弹窗 -->
+        <div class="zhezhao" id='zhezhao'>
+            <div class="tankuang" style="overflow-y:auto;">
+                <div id="header">
+                    <h2 style="margin-top: 10%;">上传图片</h2>
+                    <form id="kq_check" onsubmit="return false">
+                        <input type="file" name="kq_pic" id="kq_pic" title="点击选择文件" multiple="" accept="*/*" class="form-control">
+                        <br>
+                        <br>
+                        <!-- <button style="height:20px" onclick="useradd()">提交  </button> -->
+                        <button type="button" onclick="kq_check()">提交</button>
+                    </form>
+
+                    <!--<form method="post" action="/kq_check" enctype="multipart/form-data">-->
+                        <!--<input type="file" name="picture">-->
+                        <!--<br>-->
+                        <!--<br>-->
+                        <!--<input type="submit" value="提交" onclick=msg()>-->
+                    <!--</form>-->
+                    <hr style="width: 80%;">
+                    <h2>识别结果</h2>
+                    <div >
+                        <table border="1" id="poweruser">
+                            <thead id="thread">
+                            <tr>
+                                <th>序号</th>
+                                <th>姓名</th>
+                                <th>签到状态</th>
+
+                            </tr>
+                            </thead>
+
+                            <!--<tr>-->
+                                <!--<td>1</td>-->
+                                <!--<td>健哥哥</td>-->
+                                <!--<td><input class='switch-component' type="checkbox"></td>-->
+                            <!--</tr>-->
+                            <tbody>
+                            <!--这是根据后台的数据在js中进行创建tr标签-->
+                            </tbody>
+                        </table>
+                        <br>
+                        <input type="submit" value="确认提交" onclick=sub_table()>
+                        <br>
+                    </div>
+                    <div id="header-right" onclick="hidder()">x</div>
+                </div>
+            </div>
+        </div>
+        <!-- 第二个弹窗 -->
+        <div class="zhezhao" id='zhezhao_2'>
+            <div class="tankuang" style="overflow-y:auto;">
+                <div id="header">
+                    <h2 style="margin-top: 10%;">添加用户</h2>
+                    <!-- <form method="POST" enctype="application/x-www-form-urlencoded"> -->
+                    <!-- 姓名：
+                    <input type="text" name="add_name" id="add_name">
+                    <br>
+                    <br> 学号：
+                    <input type="text" name="add_id" id="add_id">
+                    <br>
+                    <br><input type="file" name="add_pic">
+                    <br>
+                    <br>
+                    <button style="height:20px" onclick="useradd()">提交  </button> -->
+                    <!-- </form> -->
+                    <form id="user_add_form" onsubmit="return false">
+                        姓名：
+                        <input type="text" name="add_name" id="add_name">
+                        <br>
+                        <br> 学号：
+                        <input type="text" name="add_id" id="add_id">
+                        <br>
+                        <br><input type="file" name="file" id="file" title="点击选择文件" multiple="" accept="*/*" class="form-control">
+                        <br>
+                        <br>
+                        <!-- <button style="height:20px" onclick="useradd()">提交  </button> -->
+                        <button type="button" onclick="fsubmit()">提交</button>
+                    </form>
+
+                    <hr style="width: 80%;">
+                    <h2>删除用户</h2>
+                    <form  id="user_delete_form" onsubmit="return false">
+                        学号：
+                        <input type="text" name="delete_id" id="delete_id">
+                        <br>
+                        <br>
+                        <button type="button" onclick="delete_user()">提交</button>
+                    </form>
+                    <div id="header-right" onclick="hidder()">x</div>
+                </div>
+            </div>
+        </div>
+        <!-- 第三个弹窗 -->
+        <div class="zhezhao" id='zhezhao_3'>
+            <div class="tankuang" style="overflow-y:auto;">
+                <div id="header">
+                    <h2 style="margin-top: 10%;">查询记录</h2>
+                    <form  id="user_search_form" onsubmit="return false">
+
+                        日期
+                        <input type="text" name="search_date" id="search_date" placeholder="2019-11-11">
+                        <br>
+                        <br>姓名<input type="text" name="search_name" id="search_name">
+                        <br>
+                        <br>
+                        <button type="button" onclick="kq_search()">提交</button>
+                    </form>
+                    <hr style="width: 80%;">
+                    <h2>结果</h2>
+                    <div>
+                        <table border="1" id="search_info">
+                            <thead >
+                            <tr>
+                                <th>姓名</th>
+                                <th>日期</th>
+                                <th>签到状态</th>
+
+                            </tr>
+                            </thead>
+
+                            <!--<tr>-->
+                                <!--<td>1</td>-->
+                                <!--<td>健哥哥</td>-->
+                                <!--<td><input class='switch-component' type="checkbox"></td>-->
+                            <!--</tr>-->
+                            <tbody>
+                            <!--这是根据后台的数据在js中进行创建tr标签-->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="header-right" onclick="hidder()">x</div>
+                </div>
+            </div>
+        </div>
+        <!-- 第四个弹窗 -->
+        <div class="zhezhao" id='zhezhao_4'>
+            <div class="tankuang" style="overflow-y:auto;">
+                <div id="header">
+                    <h2 style="margin-top: 10%;">使用说明</h2>
+                    <h3 style="text-align: left;margin:0% 5% 5% 5%;">1、拍照后上传图片进行人脸识别考勤，未识别的用户会优先展示，若因为拍摄角度问题，管理员可以手动更改签到状态再提交</h3>
+                    <h3 style="text-align: left;margin:0% 5% 5% 5%;">2、添加用户后的初始密码是123456，用户登入后可以修改</h3>
+                    <h3 style="text-align: left;margin:0% 5% 5% 5%;">3、查询记录可以按天按姓名查询</h3>
+                    <h3 style="text-align: left;margin:0% 5% 5% 5%;">4、如果觉得我们还不错，欢迎支持我们，支付宝15065827582</h3>
+
+                    <div id="header-right" onclick="hidder()">x</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="static/jquery.js"></script>
+    <script>
+        document.getElementById('zhezhao').style.display = "none";
+        document.getElementById('zhezhao_2').style.display = "none";
+        document.getElementById('zhezhao_3').style.display = "none";
+        document.getElementById('zhezhao_4').style.display = "none";
+
+
+
+        function hidder() {
+            document.getElementById('zhezhao').style.display = "none";
+            document.getElementById('zhezhao_2').style.display = "none";
+            document.getElementById('zhezhao_3').style.display = "none";
+            document.getElementById('zhezhao_4').style.display = "none";
+        }
+
+        function Q_dao() {
+            document.getElementById('zhezhao').style.display = "";
+        }
+
+        function Add_user() {
+            document.getElementById('zhezhao_2').style.display = "";
+        }
+
+        function Search_info() {
+            document.getElementById('zhezhao_3').style.display = "";
+        }
+
+        function Tips() {
+            document.getElementById('zhezhao_4').style.display = "";
+        }
+
+        // function useradd() {
+        //     var id = document.getElementById("add_name").value
+        //     var name = document.getElementById("add_id").value
+        //     var pic = document.getElementById("add_pic").value
+        //     url = "./useradd";
+        //     console.log(id, name, pic)
+        // var httpRequest = new XMLHttpRequest(); //第一步：建立所需的对象
+        // httpRequest.open('POST', url, true); //第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+        // httpRequest.setRequestHeader("Content-type", "application/json");
+        // httpRequest.send(); //第三步：发送请求  将请求参数写在URL中
+        // /**
+        //  * 获取数据后的处理程序
+        //  */
+        // httpRequest.onreadystatechange = function() {
+        //     if (httpRequest.status == 200) {
+        //         var result = httpRequest.responseText; //获取到json字符串，还需解析
+        //         if (result == "ok") {
+        //             alert("添加成功")
+        //         } else {
+        //             alert("添加失败")
+        //         }
+
+        //     }
+        // };
+
+        // }
+        function kq_search() {
+            var obj = document.getElementsByName("get_info");
+
+            for(var i = 0;i<(obj.length) * 2;i){
+                obj[0].remove();//remove为jQuery方法。
+                // console.log(i)
+            }
+
+            let formData = new FormData(document.getElementById("user_search_form"));
+            $.ajax({
+                url: '/usersearch',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: (rec) => {
+                    alert("查询成功")
+                    console.log(rec)
+                    var tdArr = document.getElementById('search_info').firstElementChild;
+
+                    for (var i = 1; i < rec.length+1; i++) {
+                    var tr = document.createElement("tr");
+                    tr.setAttribute("name","get_info")
+                    tr.innerHTML = '<td>' + rec[i-1][0] + '</td>'
+                        + '<td>' + rec[i - 1][1] + '</td>'
+                        + '<td>' + rec[i - 1][2] + '</td>'
+                        + '</td>';
+
+		            tdArr.appendChild(tr);
+		            }
+
+                },
+                error: err => {
+                    console.log(err)
+                    alert("查询失败")
+                }
+            });
+            return false;
+
+        }
+
+        function sub_table() {
+            var tr = $("#poweruser tr"); // 获取table中每一行内容
+	        var result = []; // 数组
+	        for (var i = 0; i < tr.length; i++) {// 遍历表格中每一行的内容
+		    var tds = $(tr[i]).find("td");
+		    if (tds.length > 0) {
+			    result.push({
+				    "index" :tds[0].innerHTML,
+				    "name" : tds[1].innerHTML,
+				    "status" : $(tds[2]).find("input").prop('checked'),
+			    })
+                // console.log(tds[0], tds[1],$(tds[2]).find("input").prop('checked') )
+		    }
+		    // console.log(result)
+	        }
+            var jsonData = { // json数据
+            "upload_table" : result
+            }
+            // let formData = new FormData(result);
+
+            $.ajax({
+                type : "post",
+                url : "/upload_table",
+                headers	:{'Content-Type': 'application/json'},
+                contentType : "application/json;charset=UTF-8",
+
+                data : JSON.stringify(jsonData),// 将json数据转化为字符串
+                success : function(data) {
+                    console.log("提交成功")
+                    alert("提交成功")
+
+                },error: err => {
+                    console.log(err)
+                    alert("添加失败")
+                }
+            })
+        }
+
+        function fsubmit() {
+            //首先验证文件格式
+            let formData = new FormData(document.getElementById("user_add_form"));
+            $.ajax({
+                url: '/useradd',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: (rec) => {
+                    alert("添加成功")
+                },
+                error: err => {
+                    console.log(err)
+                    alert("添加失败")
+                }
+            });
+            return false;
+        };
+
+        function delete_user() {
+            //首先验证文件格式
+            let formData = new FormData(document.getElementById("user_delete_form"));
+            $.ajax({
+                url: '/userdelete',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: (rec) => {
+                    alert("删除成功")
+                },
+                error: err => {
+                    console.log(err)
+                    alert("删除失败，用户或不存在")
+                }
+            });
+            return false;
+        };
+
+        function kq_check() {
+            var obj = document.getElementsByName("get_result");
+
+            for(var i = 0;i<(obj.length) * 2;i){
+                obj[0].remove();//remove为jQuery方法。
+                // console.log(i)
+            }
+            // var thread = document.getElementById('thread')
+            // alert(thread.firstChild)
+            // var delete_content=document.getElementsByName("get_result")
+            // if(delete_content){
+            //     thread.removeChild(delete_content)
+            // }
+            //首先验证文件格式
+            let formData = new FormData(document.getElementById("kq_check"));
+            $.ajax({
+                url: '/kq_check',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: (rec) => {
+                    var tdArr = document.getElementById('poweruser').firstElementChild;
+                    // alert(tdArr.id)
+
+                    alert("上传成功，正在识别，请稍后...")
+                    for (var i = 1; i < rec.length+1; i++) {
+                    var tr = document.createElement("tr");
+                    tr.setAttribute("name","get_result")
+                    if(rec[i-1][1]==1) {
+                        tr.innerHTML = '<td>' + i + '</td>'
+                            + '<td>' + rec[i - 1][0] + '</td>'
+                            + '<td><input type="checkbox" name="field_value" checked id="' + 'result' + i + '" class="switch-component" /></td>'
+                            + '</td>';
+                    }else{
+                        tr.innerHTML = '<td>' + i + '</td>'
+                            + '<td>' + rec[i - 1][0] + '</td>'
+                            + '<td><input type="checkbox" name="field_value" id="' + 'result' + i + '" class="switch-component" /></td>'
+                            + '</td>';
+                    }
+		            tdArr.appendChild(tr);
+		            }
+
+
+
+                },
+                error: err => {
+                    console.log(err)
+                    alert("上传失败")
+                }
+            });
+            return false;
+        };
+    </script>
+</body>
+
+</html>

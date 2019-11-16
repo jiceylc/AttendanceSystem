@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="Login.css" />
+
+</head>
+<style>
+    html {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-style: sans-serif;
+    }
+    
+    body {
+        width: 100%;
+        height: 100%;
+        font-family: 'Open Sans', sans-serif;
+        margin: 0;
+        background-color: rgb(30, 32, 32);
+    }
+    
+    #login {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -150px 0 0 -150px;
+        width: 300px;
+        height: 300px;
+    }
+    
+    #login h1 {
+        color: #fff;
+        text-shadow: 0 0 10px;
+        letter-spacing: 1px;
+        text-align: center;
+    }
+    
+    h1 {
+        font-size: 2em;
+        margin: 0.67em 0;
+    }
+    
+    input {
+        width: 278px;
+        height: 18px;
+        margin-bottom: 10px;
+        outline: none;
+        padding: 10px;
+        font-size: 13px;
+        color: #fff;
+        text-shadow: 1px 1px 1px;
+        border-top: 1px solid #312E3D;
+        border-left: 1px solid #312E3D;
+        border-right: 1px solid #312E3D;
+        border-bottom: 1px solid #56536A;
+        border-radius: 4px;
+        background-color: #2D2D3F;
+    }
+    
+    .but {
+        width: 300px;
+        min-height: 20px;
+        display: block;
+        background-color: #4a77d4;
+        border: 1px solid #3762bc;
+        color: #fff;
+        padding: 9px 14px;
+        font-size: 15px;
+        line-height: normal;
+        border-radius: 5px;
+        margin: 0;
+    }
+</style>
+
+<body>
+    <div id="login">
+        <h1>人脸识别考勤系统</h1>
+        <!-- <form target="form1" name="form1" enctype="multipart/form-data"> -->
+        <input type="text" required="required" placeholder="用户名" id="u"></input>
+        <input type="password" required="required" placeholder="密码" id="p"></input>
+        <button class="but" id="sub" onclick="check()">登录</button>
+        <!-- </form> -->
+    </div>
+</body>
+<script>
+    function check() {
+        var username = document.getElementById("u").value
+        var passward = document.getElementById("p").value
+        var url = "./check?username=" + username + "&passward=" + passward
+        console.log(url)
+        var httpRequest = new XMLHttpRequest(); //第一步：建立所需的对象
+        httpRequest.open('GET', url, true); //第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+        httpRequest.send(); //第三步：发送请求  将请求参数写在URL中
+        /**
+         * 获取数据后的处理程序
+         */
+        httpRequest.onreadystatechange = function() {
+            if (httpRequest.status == 200) {
+                var result = httpRequest.responseText; //获取到json字符串，还需解析
+                console.log(result)
+                if (result == "1") {
+                    alert("验证成功")
+                    window.location.href = "http://127.0.0.1:8088/index"
+                }
+                if (result == "2") {
+                    alert("用户名或密码错误")
+                    window.location.href = "http://127.0.0.1:8088/log"
+
+                }
+            }
+        };
+
+    }
+</script>
+
+</html>
